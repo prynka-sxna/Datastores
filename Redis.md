@@ -1,6 +1,7 @@
 **Redis 6** 
 
 Documentation: https://redis.io/docs/ 
+
 Commands: https://redis.io/commands/ 
 
 - In-memory, key(String)-value(Data Structure) data-store.
@@ -25,20 +26,21 @@ Commands: https://redis.io/commands/
   - Broadcast Mode: Clients subscribe to key prefixes and receive a notification message every time a key matching a subscribed prefix changes.
 
 **Data Structures** 
+
 Manual: https://redis.io/docs/manual/data-types/data-types-tutorial/
 1. String: Binary safe string. Implemented using C dynamic strings to avoid cost of memory allocation.
 2. List: LL of string elements sorted according to the order of insertion. Supports blocking operations with timeout.
 3. Set: Collections of unique, unsorted string elements. O(1) insertion/deletion/membership check. Hash table implementation.
 4. Sorted Set: Sets where every string element is sorted based on the associated score(float). Skip list implementation.
 5. Hash Map: [field->value] pairs. Hash Table implementation.
-Note: 
-- Lists/Sorted Sets/Maps that have a small size are encoded in ziplist format (length of previous entry, length of current entry, string).
-- Sets that have a small size are encoded in intset format (sorted array of integers). 
+
+- Note: 
+  - Lists/Sorted Sets/Maps that have a small size are encoded in ziplist format (length of previous entry, length of current entry, string).
+  - Sets that have a small size are encoded in intset format (sorted array of integers). 
 6. Bit Map: Allows strings to be handled like array of bits. Can be extended to support Bloom Filters.
 7. HyperLogLog: 
-- Probabilistic data structure encoded as string that is used to estimate the cardinality of a set. 
+- Probabilistic data structure encoded as string that is used to estimate the cardinality of a multi-set. 
 - Uses constant memory to estimate with an error < 1%. 
-- TD: Algo
 8. Stream: 
 - Entries are structured as field-value pairs, with entryId <ms>-<seqNo> key for accessing latest entries ordered by time in a blocking or non-blocking manner.
 - Radix tree(Compact prefix tree) of delta compressed nodes. 
@@ -47,9 +49,14 @@ Note:
 9. Geospatial Index: Field->Lat-long pairs are stored in a sorted set.
   
 **Features Supported by Redis Stack**
-TD: https://redis.io/docs/stack
+
+https://redis.io/docs/stack
 - Queryable JSON documents
 - Full-text search
 - Time series data (ingestion & querying)
 - Graph data models with the Cypher query language
-- Probabilistic data structures [RedisBloom]: Bloom filter, a cuckoo filter, a count-min sketch, and a top-k.
+- Probabilistic data structures [RedisBloom]: 
+  - Bloom filter (membership in a set, false positives are possible but false negatives are not)
+  - Cuckoo filter (same as filter except deletion is possible)
+  - Count-min sketch (keeps count of frequencies of elements in a stream, might overcount) 
+  - Top k [Heavy Keeper Algorithm]
